@@ -5,7 +5,10 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Button
 import android.widget.EditText
+import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -22,6 +25,9 @@ class MainActivity : AppCompatActivity() {
     lateinit var btnBuscarCep: Button
     lateinit var tv_rua_cidade_estado : TextView
 
+    lateinit var rvCeps: RecyclerView
+    lateinit var cepsAdapter: CepsAdapter
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,11 +42,20 @@ class MainActivity : AppCompatActivity() {
         nomeCidade = findViewById(R.id.nomeCidade)
         siglaEstado = findViewById(R.id.siglaEstado)
         btnBuscarCep = findViewById(R.id.btnBuscarCep)
-        tv_rua_cidade_estado = findViewById(R.id.tv_rua_cidade_estado)
+
+        //Configuração da RecyclerView
+        rvCeps = findViewById(R.id.rv_ceps)
+        cepsAdapter = CepsAdapter(this)
+
+        //Determinar o Layout da RV
+        rvCeps.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL,false)
+
+        //Definir o adapter da RV
+        rvCeps.adapter = cepsAdapter
 
         buttonBuscar.setOnClickListener{
 
-            //Obter uma instância da conexão com o Backend
+            //Obter uma instância da conexão com o Backend(criando o cliente http)
             val remote = RetrofitFactory().retrofitService()
 
             //Criar uma chamada para o endpoint /cep/json
@@ -50,7 +65,7 @@ class MainActivity : AppCompatActivity() {
             call.enqueue(object : Callback<Cep> {
                 override fun onResponse(call: Call<Cep>, response: Response<Cep>) {
                     val cep = response.body()
-                    textViewEndereco.text = cep.toString()
+                textViewEndereco.text = cep.toString()
                 }
 
                 override fun onFailure(call: Call<Cep>, t: Throwable) {
@@ -68,8 +83,10 @@ class MainActivity : AppCompatActivity() {
 
             call.enqueue(object : Callback<List<Cep>> {
                 override fun onResponse(call: Call<List<Cep>>, response: Response<List<Cep>>) {
-                    val cepList = response.body()
-                    tv_rua_cidade_estado.text = cepList.toString()
+
+                    val ceps = response.body()
+
+                    cepsAdapter.updateListaCep(ceps!!)
 
                 }
 
