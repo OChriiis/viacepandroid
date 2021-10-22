@@ -7,6 +7,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import retrofit2.Call
@@ -47,8 +48,12 @@ class MainActivity : AppCompatActivity() {
         rvCeps = findViewById(R.id.rv_ceps)
         cepsAdapter = CepsAdapter(this)
 
+
+//        //Determinar o Layout da RV
+//        rvCeps.layoutManager = LinearLayoutManager(this,LinearLayoutManager.VERTICAL, false )
+
         //Determinar o Layout da RV
-        rvCeps.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL,false)
+        rvCeps.layoutManager = GridLayoutManager(this, 2)
 
         //Definir o adapter da RV
         rvCeps.adapter = cepsAdapter
