@@ -6,10 +6,11 @@ import java.net.URL
 
 class RetrofitFactory {
 
+    val BASE_URL = "https://10.0.2.2:8080/api/"
     val URL = "https://viacep.com.br/ws/"
 
     val retrofitFactory = Retrofit.Builder()
-        .baseUrl(URL)
+        .baseUrl(BASE_URL)
         .addConverterFactory(GsonConverterFactory.create())
         .build()
 
